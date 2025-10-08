@@ -29,6 +29,10 @@
             <name>GitHub Packages</name>
             <url>https://maven.pkg.github.com/gfice2003/onion</url>
         </repository>
+        <snapshotRepository>
+            <id>lmg-maven-common</id>
+            <url>https://nexus-cr.yc-gopoints.ru/repository/lmg-maven-common/</url>
+        </snapshotRepository>
     </distributionManagement>
 
 </project>
