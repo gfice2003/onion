@@ -1,6 +1,7 @@
 package tech.grove.onion.utils;
 
-import tech.grove.onion.tools.StackHelper;
+import tech.grove.onion.stubs.TestStackFrame;
+import tech.grove.onion.tools.stack.StackHelper;
 
 import java.util.stream.IntStream;
 

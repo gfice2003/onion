@@ -2,7 +2,7 @@ package tech.grove.onion.data.exception;
 
 import tech.grove.onion.data.stack.StackInfo;
 import tech.grove.onion.data.stack.StackMode;
-import tech.grove.onion.tools.StackHelper;
+import tech.grove.onion.tools.stack.StackHelper;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -18,6 +18,7 @@ public record ExceptionInfo(Class<?> type, String message, StackInfo stack, Exce
         private Function<Throwable, ? extends Class<?>> classExtractor   = this::extractClass;
         private Function<Throwable, String>             messageExtractor = this::extractMessage;
         private Function<Throwable, StackInfo>          stackExtractor   = x -> extractStack(x, StackMode.FAIR);
+        private Function<Throwable, ExceptionInfo>      causeExtractor   = x -> buildFor(x.getCause());
 
         private final Throwable exception;
 
@@ -29,23 +30,27 @@ public record ExceptionInfo(Class<?> type, String message, StackInfo stack, Exce
             return this.<Class<?>>resetHandlerAndContinue(x -> classExtractor = x);
         }
 
-        public Builder stackMode(StackMode mode) {
-
-            if (mode != null) {
-                stackExtractor = x -> extractStack(x, mode);
-            } else {
-                stackExtractor = x -> null;
-            }
-
-            return this;
-        }
-
         public Builder noStack() {
             return this.<StackInfo>resetHandlerAndContinue(x -> stackExtractor = x);
         }
 
         public Builder noMessage() {
             return this.<String>resetHandlerAndContinue(x -> messageExtractor = x);
+        }
+
+        public Builder noCause() {
+            return this.<ExceptionInfo>resetHandlerAndContinue(x -> causeExtractor = x);
+        }
+
+        public Builder stackMode(StackMode mode) {
+
+            if (mode != null) {
+                stackExtractor = x -> extractStack(x, mode);
+            } else {
+                noStack();
+            }
+
+            return this;
         }
 
         public ExceptionInfo build() {
@@ -58,7 +63,7 @@ public record ExceptionInfo(Class<?> type, String message, StackInfo stack, Exce
                         classExtractor.apply(throwable),
                         messageExtractor.apply(throwable),
                         stackExtractor.apply(throwable),
-                        buildFor(throwable.getCause())
+                        causeExtractor.apply(throwable)
                 );
             } else {
                 return null;

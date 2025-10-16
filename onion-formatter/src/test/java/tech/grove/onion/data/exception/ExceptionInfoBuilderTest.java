@@ -2,7 +2,7 @@ package tech.grove.onion.data.exception;
 
 import org.junit.jupiter.api.Test;
 import tech.grove.onion.data.stack.StackMode;
-import tech.grove.onion.tools.StackHelper;
+import tech.grove.onion.tools.stack.StackHelper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -28,6 +28,7 @@ public class ExceptionInfoBuilderTest {
                     .noClass()
                     .noMessage()
                     .noStack()
+                    .noCause()
                     .build();
         }
         then:
@@ -43,6 +44,7 @@ public class ExceptionInfoBuilderTest {
             result = ExceptionInfo.of(null)
                     .noStack()
                     .noMessage()
+                    .noCause()
                     .build();
         }
         then:
@@ -58,6 +60,7 @@ public class ExceptionInfoBuilderTest {
             result = ExceptionInfo.of(null)
                     .noClass()
                     .noStack()
+                    .noCause()
                     .build();
         }
         then:
@@ -73,6 +76,23 @@ public class ExceptionInfoBuilderTest {
             result = ExceptionInfo.of(null)
                     .noClass()
                     .noMessage()
+                    .noCause()
+                    .build();
+        }
+        then:
+        {
+            assertNull(result);
+        }
+    }
+
+    @Test
+    public void build_includeCause_returnsNull() {
+        when:
+        {
+            result = ExceptionInfo.of(null)
+                    .noClass()
+                    .noMessage()
+                    .noStack()
                     .build();
         }
         then:
@@ -110,6 +130,7 @@ public class ExceptionInfoBuilderTest {
                     .noClass()
                     .noMessage()
                     .noStack()
+                    .noCause()
                     .build();
         }
         then:
@@ -133,6 +154,7 @@ public class ExceptionInfoBuilderTest {
             result = ExceptionInfo.of(CAUSE)
                     .noMessage()
                     .noStack()
+                    .noCause()
                     .build();
         }
         then:
@@ -156,6 +178,7 @@ public class ExceptionInfoBuilderTest {
             result = ExceptionInfo.of(CAUSE)
                     .noClass()
                     .noStack()
+                    .noCause()
                     .build();
         }
         then:
@@ -180,6 +203,7 @@ public class ExceptionInfoBuilderTest {
                     .stackMode(null)
                     .noClass()
                     .noMessage()
+                    .noCause()
                     .build();
         }
         then:
@@ -203,6 +227,7 @@ public class ExceptionInfoBuilderTest {
             result = ExceptionInfo.of(CAUSE)
                     .noClass()
                     .noMessage()
+                    .noCause()
                     .build();
         }
         then:
@@ -240,12 +265,7 @@ public class ExceptionInfoBuilderTest {
                     null,
                     null,
                     null,
-                    new ExceptionInfo(
-                            null,
-                            null,
-                            null,
-                            null
-                    ));
+                    null);
         }
         when:
         {
@@ -253,6 +273,7 @@ public class ExceptionInfoBuilderTest {
                     .noClass()
                     .noMessage()
                     .noStack()
+                    .noCause()
                     .build();
         }
         then:
@@ -269,18 +290,14 @@ public class ExceptionInfoBuilderTest {
                     EXCEPTION.getClass(),
                     null,
                     null,
-                    new ExceptionInfo(
-                            CAUSE.getClass(),
-                            null,
-                            null,
-                            null
-                    ));
+                    null);
         }
         when:
         {
             result = ExceptionInfo.of(EXCEPTION)
                     .noMessage()
                     .noStack()
+                    .noCause()
                     .build();
         }
         then:
@@ -297,18 +314,14 @@ public class ExceptionInfoBuilderTest {
                     null,
                     EXCEPTION_MESSAGE,
                     null,
-                    new ExceptionInfo(
-                            null,
-                            CAUSE_MESSAGE,
-                            null,
-                            null
-                    ));
+                    null);
         }
         when:
         {
             result = ExceptionInfo.of(EXCEPTION)
                     .noClass()
                     .noStack()
+                    .noCause()
                     .build();
         }
         then:
@@ -325,10 +338,34 @@ public class ExceptionInfoBuilderTest {
                     null,
                     null,
                     StackHelper.toInfo(EXCEPTION.getStackTrace()).mode(StackMode.FAIR),
+                    null);
+        }
+        when:
+        {
+            result = ExceptionInfo.of(EXCEPTION)
+                    .noClass()
+                    .noMessage()
+                    .noCause()
+                    .build();
+        }
+        then:
+        {
+            assertEquals(expected, result);
+        }
+    }
+
+    @Test
+    public void build_validExceptionWithCauseIncludeCause_returnsInfoWithCause() {
+        given:
+        {
+            expected = new ExceptionInfo(
+                    null,
+                    null,
+                    null,
                     new ExceptionInfo(
                             null,
                             null,
-                            StackHelper.toInfo(CAUSE.getStackTrace()).mode(StackMode.FAIR),
+                            null,
                             null
                     ));
         }
@@ -337,6 +374,7 @@ public class ExceptionInfoBuilderTest {
             result = ExceptionInfo.of(EXCEPTION)
                     .noClass()
                     .noMessage()
+                    .noStack()
                     .build();
         }
         then:
