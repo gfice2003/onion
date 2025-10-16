@@ -1,7 +1,6 @@
-package tech.grove.onion.dummy.layer;
+package tech.grove.onion.dummy;
 
 import org.junit.jupiter.api.Test;
-import tech.grove.onion.dummy.Dummy;
 
 import java.time.LocalDateTime;
 

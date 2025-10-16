@@ -19,7 +19,7 @@ public class StringCompiler extends BaseChainedTransformer<Compilable, Compiled<
 
     interface Token {
         String OFFSET                = "   ";
-        String SEPARATOR             = ": ";
+        String SEPARATOR             = ":";
         String SPACE                 = " ";
         String DURATION_START        = "[";
         String DURATION_STOP         = "]";
@@ -151,8 +151,6 @@ public class StringCompiler extends BaseChainedTransformer<Compilable, Compiled<
                         .append(more)
                         .append(STACK_MORE);
             }
-
-            return true;
         }
         return false;
     }
@@ -173,8 +171,6 @@ public class StringCompiler extends BaseChainedTransformer<Compilable, Compiled<
 
             printStack(builder, exception.stack());
             printException(builder, exception.causedBy(), true);
-
-            return true;
         }
         return false;
     }

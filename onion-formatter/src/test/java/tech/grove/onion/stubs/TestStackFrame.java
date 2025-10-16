@@ -66,4 +66,9 @@ public class TestStackFrame implements StackWalker.StackFrame {
     public int hashCode() {
         return Objects.hashCode(className, methodName, lineNumber);
     }
+
+    @Override
+    public String toString() {
+        return className + "." + methodName + " " + lineNumber;
+    }
 }
